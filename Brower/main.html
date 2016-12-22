@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Picture Wall</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/mystyles.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="navbar-wrapper">
+        <div class="container">
+            <nav class="navbar navbar-static-top " role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"></button>
+                        <a class="navbar-brand popup" href="#" data-width="600" data-height="400" title="Hello">语音相册</a>
+                    </div>
+                    <form class="navbar-form navbar-left" role="search" style="padding-left: 15%">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="搜索话题">
+                        </div>
+                        <button type="submit" class="btn btn-primary">搜索</button>
+                    </form>
+
+                    <div id="navbar" class="navbar-collapse collapse navbar-right">
+                        <ul class="nav navbar-nav ">
+                            <li class="active"><a href="#">动态</a></li>
+                            <li><a href="#"> 个人用户</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle " data-toggle="dropdown">更多<span class="caret"></span></a>
+                                <ul class="dropdown-menu " role="menu">
+                                    <li><a href="#">设置</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#">退出</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr class="featurette-divider">
+            </nav>
+        </div>
+    </div>
+    <div>
+        <div class="container" style="position: absolute">
+            <div class="leftbottomgroup">
+                <div>
+                    <button class="_n4m46">
+            <span class="_p1u2e  coreSpriteAddPhoto">
+            </span>
+            添加照片
+        </button>
+                </div>
+
+                <div>
+                    <button id="p" class="btn btn-success martop">添加录音</button>
+                    <button id="s" class="btn btn-danger martop">停止录音</button>
+                    <button id="upload" class="btn btn-primary martop">确认发表</button>
+                </div>
+                <hr class="featurette-divider">
+            </div>
+            <div class="previewgroup recordingslist">
+                <img src="" id="prewimg" />
+                <ul id="recordingslist"></ul>
+            </div>
+            <input type="file" id="prewimgsrc">
+        </div>
+    </div>
+    <div>
+        <div id="d">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+
+    </div>
+    <script src="js/mymusicdiv.js"></script>
+    <script src="js/recorder.js"></script>
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+        var mp3Blob;
+
+        window.onload = function() {
+
+            $("#upload").click(function() {
+
+                var mFormData = new FormData();
+                // var mp3Name = encodeURIComponent('audio_recording_' + new Date().getTime() + '.mp3');
+                // fd.append('mp3Name', mp3Name);
+                //fd.append('Picture', mp3Blob);
+                mFormData.append('Voice', mp3Blob);
+                mFormData.append('Describe', "嗨啊");
+
+
+                $.ajax({
+                    url: "/Main/PostMessage",
+                    type: "post",
+                    data: mFormData,
+                    processData: false,
+                    contentType: false,
+                    success: function(data) {}
+                });
+            })
+
+
+            window.AudioContext = window.AudioContext || window.webkitAudioContext;
+            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+            window.URL = window.URL || window.webkitURL;
+            var recorder;
+
+            var d = document.getElementById('d');
+            for (var i = 0; i < 256; i++) {
+                d.innerHTML += '<div></div>';
+            }
+            var dd = document.querySelectorAll('#d div');
+
+            var s = document.getElementById('s');
+            var p = document.getElementById('p');
+            var timer;
+            var context = new AudioContext();
+
+            navigator.getUserMedia({
+                audio: true
+            }, function(stream) {
+                var microphone = context.createMediaStreamSource(stream);
+                var analyser = context.createAnalyser();
+                microphone.connect(analyser);
+                //analyser.connect(context.destination);
+                analyser.fftSize = 2048;
+                var bufferLength = analyser.frequencyBinCount;
+                var dataArray = new Uint8Array(analyser.fftSize);
+                analyser.getByteFrequencyData(dataArray);
+
+                s.onclick = function() {
+                    clearTimeout(timer);
+                    p.disabled = false;
+                    s.disabled = true;
+                    recorder.stop();
+                    createDownloadLink();
+                    recorder.clear();
+                };
+
+                p.onclick = function() {
+                    recorder = new Recorder(microphone);
+                    recorder.record();
+                    p.disabled = true;
+                    s.disabled = false;
+                    update();
+                };
+
+
+                function update() {
+                    console.log(dataArray);
+                    analyser.getByteFrequencyData(dataArray);
+                    for (var j = 0; j < 256; j++) {
+                        dd[j].style.height = dataArray[j] + 'px';
+                        dd[j].style.background = 'rgba(' + (255 - j) + ',' + j * 2 + ',0,1)';
+                    }
+                    timer = setTimeout(update, 20);
+                }
+
+                function createDownloadLink() {
+                    recorder.exportWAV(function(blob) {
+                        mp3Blob = blob;
+                        var url = URL.createObjectURL(blob);
+                        var li = document.createElement('li');
+                        var au = document.createElement('audio');
+                        var hf = document.createElement('a');
+
+                        au.controls = true;
+                        au.src = url;
+                        hf.href = url;
+                        hf.download = new Date().toISOString() + '.wav';
+                        hf.innerHTML = hf.download;
+                        li.appendChild(au);
+                        li.appendChild(hf);
+                        recordingslist.appendChild(li);
+                    });
+                }
+
+                function funUpload() {
+                    var fd = new FormData();
+                    var mp3Name = encodeURIComponent('audio_recording_' + new Date().getTime() + '.mp3');
+                    fd.append('mp3Name', mp3Name);
+                    fd.append('file', mp3Blob);
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', 'upload.ashx');
+                    xhr.send(fd);
+                }
+
+            }, function() {
+                console.log('error');
+            });
+        };
+    </script>
+</body>
+
+</html>

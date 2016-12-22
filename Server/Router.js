@@ -8,11 +8,16 @@ var url = require('url');
 var querystring = require('querystring');
 var formidable = require('formidable');
 var Mime = require('./Mime');
-var Config = require('./Config').Config;
 var User = require('./User');
+var Message = require('./Message');
+var Config = require('./Config').Config;
+
+var Account;//连接Cookie中获取出来的用户ID
 
 exports.Handle = function(Request, Response)
 {
+    Account = Request.headers.cookie["account"];
+
     if(Request.method == 'GET')
     {
         HandleGet(Request, Response)
@@ -27,9 +32,15 @@ function HandleGet(Request, Response)
 {
     var Path = url.parse(Request.url).pathname;
 
+    //重定向默认主页
     if(Path == '/')
     {
         Path = Config['IndexPage'];
+    }
+    //补齐后缀
+    else if(Path.indexOf(".") == -1)
+    {
+        Path += '.html';
     }
 
     fs.readFile('./Brower/' + Path, 'binary',function (Error, Data)
@@ -58,7 +69,7 @@ function HandlePost(Request, Response)
         //登陆页，登陆事件
         case '/Index/Login':HandleLoginEvent(Request, Response);break;
         //个人主页，发送照片事件
-        case '/Main/PostPicture':HandlePostPictureEvent(Request, Response);break;
+        case '/Main/PostMessage':HandlePostMessageEvent(Request, Response);break;
         //每页开始时判断是否曾经已经登陆过
         case '/IsLogin':HandleIsLoginEvent(Request, Response);break;
         default:break;
@@ -126,16 +137,23 @@ function HandleIsLoginEvent(Request, Response)
     }
 }
 
-function HandlePostPictureEvent(Request, Response)
+function HandlePostMessageEvent(Request, Response)
 {
-    console.log('HandlePostPictureEvent');
+    //如果HTTP头没有Cookie记录已经登陆的信息，则返回，防止未经登陆的用户上传文件
+    //if(!Account)
+    //{
+    //    console.log("Cookie don't include account information!");
+    //    return;
+    //}
+
+    console.log('HandlePostMessageEvent');
 
     //创建表单上传
     var form = new formidable.IncomingForm();
     //设置编辑
     form.encoding = 'utf-8';
     //设置文件存储路径
-    form.uploadDir = Config['PicturePath'];
+    form.uploadDir = Config['RootPath'];
     //保留后缀
     form.keepExtensions = true;
     //设置单文件大小限制
@@ -143,6 +161,38 @@ function HandlePostPictureEvent(Request, Response)
     //form.maxFields = 1000;  设置所以文件的大小总和
 
     form.parse(Request, function(err, fields, files) {
-        console.log(files.upload1['path']);
+
+        var mDate = new Date();
+        var mVoicePath = Config['VoicePath'] + mDate.getFullYear() + '-' + (mDate.getMonth() + 1) + '-' + mDate.getDate() + ' ' + mDate.getHours() + '.'  + mDate.getMinutes() + '.' + mDate.getSeconds() + '.mp3';
+
+        //为录音文件添加后缀，移动到录音存放目录下
+        fs.rename(files.Voice['path'], mVoicePath, function(Error){
+            if(Error){
+                throw Error;
+            }
+        });
+
+        console.log("Account" + "|" + mVoicePath + "|" + fields.Describe);
+        return;
+
+        Message.PostMessage("Account", files.Picture['path'], mVoicePath, fields.Describe, function (Error, Rows) {
+            if(Error)
+                throw Error;
+
+            if(Rows.length >0)
+            {
+                Response.writeHead(200, {'Content-Type': 'text/plain'});
+                Response.write('PostMessageSuccess');
+                console.log('PostMessage');
+            }
+            else
+            {
+                Response.writeHead(200, {'Content-Type': 'text/plain'});
+                Response.write('PostMessageFail');
+                console.log('PostMessageFail');
+            }
+
+            Response.end();
+        });
     });
 }

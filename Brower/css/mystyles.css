@@ -1,0 +1,95 @@
+._p1u2e {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    border-radius: 50%;
+    box-sizing: border-box;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    height: 80px;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    margin: 15px auto;
+    -webkit-transition: height 1.5s ease-in,margin-bottom 1.5s ease-in,opacity 1.5s ease-in,width 1.5s ease-in;
+    transition: height 1.5s ease-in,margin-bottom 1.5s ease-in,opacity 1.5s ease-in,width 1.5s ease-in;
+    width: 80px;
+}
+._n4m46 {
+    color: #3897f0;
+    font: inherit;
+    margin: 0 auto;
+    background: 0 0;
+    border: none;
+    cursor: pointer;
+    outline: none;
+}
+.coreSpriteAddPhoto {
+    background-image: url("../pic/9ee7cc.png");
+    background-repeat: no-repeat;
+    background-position: -94px -53px;
+    height: 80px;
+    width: 80px;
+}
+
+.leftbottomgroup{
+    width: 100px;
+    float: left;
+}
+
+
+.previewgroup {
+    float: left;
+    background-color: #e1e1e1;
+    overflow: hidden;
+}
+#prewimg{
+    width: 300px;
+    height: 300px;
+    overflow: scroll;
+}
+#prewimgsrc{
+    visibility: hidden;
+}
+.martop{
+    margin-top: 20%;
+}
+
+
+
+
+#d {
+    margin: 0 auto;
+    height: 250px;
+    width: 500px;
+    overflow: hidden;
+}
+#d:after{
+    content:'';
+    display: inline-block;
+    height:250px;
+    overflow: hidden;
+}
+#d div {
+    display: inline-block;
+    width: 2px;
+    background: #a00;
+    margin: 0 0 0 1px;
+    vertical-align: bottom;
+    overflow: hidden;
+}
+.recordingslist ul {
+    list-style: none;
+}
+#recordingslist audio {
+    width: 260px;
+    display: block; margin-bottom: 10px;
+    position: absolute;
+    left: 116px;
+    top: 250px;
+}
