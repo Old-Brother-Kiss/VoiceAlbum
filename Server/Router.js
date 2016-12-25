@@ -10,13 +10,15 @@ var formidable = require('formidable');
 var Mime = require('./Mime');
 var User = require('./User');
 var Message = require('./Message');
+var Tool = require('./Tool');
 var Config = require('./Config').Config;
 
 var Account;//连接Cookie中获取出来的用户ID
 
 exports.Handle = function(Request, Response)
 {
-    Account = Request.headers.cookie["account"];
+    if(Request.headers.cookie)
+        Account = Request.headers.cookie["account"];
 
     if(Request.method == 'GET')
     {
@@ -43,33 +45,65 @@ function HandleGet(Request, Response)
         Path += '.html';
     }
 
-    fs.readFile('./Brower/' + Path, 'binary',function (Error, Data)
+    //请求服务器上的文件
+    if(Path.indexOf("/Server/") != -1)
     {
-        if (Error) {
-            Response.writeHead(404, {'Content-Type': 'text/plain'});
-            Response.write('页面丢失');
-            Response.end();
-        }
-        else
+        Path = Path.replace("%20"," ");//传递过来的请求会把空格符变为%20
+
+        fs.readFile('.' + Path, 'binary',function (Error, Data)
         {
-            var Type = path.extname(Path);
-            Type = Type ? Type.slice(1) : 'unknown';
-            var ContentType = Mime.types[Type] || "text/plain";
-            Response.writeHead(200, {'Content-Type': ContentType});
-            Response.write(Data, 'binary');
-            Response.end();
-        }
-    })
+            if (Error) {
+                Response.writeHead(450, {'Content-Type': 'text/plain'});
+                Response.write('File is not exit');
+                Response.end();
+                console.log('File is not exit');
+            }
+            else
+            {
+                var Type = path.extname(Path);
+                Type = Type ? Type.slice(1) : 'unknown';
+                var ContentType = Mime.types[Type] || "text/plain";
+                Response.writeHead(200, {'Content-Type': ContentType});
+                Response.write(Data, 'binary');
+                Response.end();
+                console.log('File is downloading');
+            }
+        })
+    }
+    else
+    {
+        fs.readFile('./Brower/' + Path, 'binary',function (Error, Data)
+        {
+            if (Error) {
+                Response.writeHead(404, {'Content-Type': 'text/plain'});
+                Response.write('页面丢失');
+                Response.end();
+            }
+            else
+            {
+                var Type = path.extname(Path);
+                Type = Type ? Type.slice(1) : 'unknown';
+                var ContentType = Mime.types[Type] || "text/plain";
+                Response.writeHead(200, {'Content-Type': ContentType});
+                Response.write(Data, 'binary');
+                Response.end();
+            }
+        })
+    }
 }
 
 function HandlePost(Request, Response)
 {
     switch(Request.url)
     {
-        //登陆页，登陆事件
-        case '/Index/Login':HandleLoginEvent(Request, Response);break;
+        //登陆事件
+        case '/Login':HandleLoginEvent(Request, Response);break;
+        //注册事件
+        case '/Register':HandleRegisterEvent(Request, Response);break;
         //个人主页，发送照片事件
-        case '/Main/PostMessage':HandlePostMessageEvent(Request, Response);break;
+        case '/PostMessage':HandlePostMessageEvent(Request, Response);break;
+        //查看附近照片
+        case '/GetOtherPicture':HandleGetOtherPictureEvent(Request, Response);break;
         //每页开始时判断是否曾经已经登陆过
         case '/IsLogin':HandleIsLoginEvent(Request, Response);break;
         default:break;
@@ -94,8 +128,15 @@ function HandleLoginEvent(Request, Response)
         Data = querystring.parse(Data);
 
         User.Login(Data.Username, Data.Password, function (Error, Rows) {
+
             if(Error)
-                throw Error;
+            {
+                Response.writeHead(550, {'Content-Type': 'text/plain'});
+                Response.write('系统出错');
+                Response.end();
+                console.log('系统出错');
+                return;
+            }
 
             if(Rows.length >0)
             {
@@ -103,16 +144,65 @@ function HandleLoginEvent(Request, Response)
                     'Set-Cookie': ["account=" + Data.Username],
                     'Content-Type': 'text/plain'});
                 Response.write('LoginSuccess' + Config.Separator + Data.Username);
+                Response.end();
                 console.log('LoginSuccess' + Config.Separator + Data.Username);
             }
             else
             {
-                Response.writeHead(200, {'Content-Type': 'text/plain'});
+                Response.writeHead(450, {'Content-Type': 'text/plain'});
                 Response.write('LoginFail');
+                Response.end();
                 console.log('LoginFail');
             }
+        });
+    });
+}
 
-            Response.end();
+function HandleRegisterEvent(Request, Response)
+{
+    console.log('HandleRegisterEvent');
+
+    var Data = '';
+
+    //通过req的data事件监听函数，每当接受到请求体的数据，就累加到post变量中
+    Request.on('data', function(datapart)
+    {
+        Data += datapart;
+    });
+
+    //在end事件触发后，通过querystring.parse将post解析为真正的POST请求格式，然后向客户端返回。
+    Request.on('end', function()
+    {
+        Data = querystring.parse(Data);
+
+        User.Register(Data.Username, Data.Password, function (Error, Rows) {
+
+            if(Error)
+            {
+                Response.writeHead(550, {'Content-Type': 'text/plain'});
+                Response.write('系统出错');
+                Response.end();
+                console.log('系统出错');
+                return;
+            }
+
+            //不存在ID冲突,注册成功
+            if(Rows['warningCount'] == 0)
+            {
+                Response.writeHead(200, {
+                    'Set-Cookie': ["account=" + Data.Username],
+                    'Content-Type': 'text/plain'});
+                Response.write('RegisterSuccess' + Config.Separator + Data.Username);
+                Response.end();
+                console.log('RegisterSuccess' + Config.Separator + Data.Username);
+            }
+            else
+            {
+                Response.writeHead(450, {'Content-Type': 'text/plain'});
+                Response.write('RegisterFail');
+                Response.end();
+                console.log('RegisterFail');
+            }
         });
     });
 }
@@ -162,37 +252,108 @@ function HandlePostMessageEvent(Request, Response)
 
     form.parse(Request, function(err, fields, files) {
 
-        var mDate = new Date();
-        var mVoicePath = Config['VoicePath'] + mDate.getFullYear() + '-' + (mDate.getMonth() + 1) + '-' + mDate.getDate() + ' ' + mDate.getHours() + '.'  + mDate.getMinutes() + '.' + mDate.getSeconds() + '.mp3';
+        var mPicturePath = "";
+        var mVoicePath = "";
+        var mState = "";
 
-        //为录音文件添加后缀，移动到录音存放目录下
-        fs.rename(files.Voice['path'], mVoicePath, function(Error){
-            if(Error){
-                throw Error;
-            }
-        });
+        if(files.Picture)
+        {
+            mPicturePath = Config['PicturePath'] + GetNowTime() + '.' + files.Picture.type;
+            //移动到录音存放目录下
+            fs.renameSync(files.Picture['path'], mPicturePath);
+        }
 
-        console.log("Account" + "|" + mVoicePath + "|" + fields.Describe);
-        return;
+        if(files.Voice)
+        {
+            mVoicePath = Config['VoicePath'] + GetNowTime() + '.' + files.Voice.type;
+            //移动到图片存放目录下
+            fs.renameSync(files.Voice['path'], mVoicePath);
+        }
 
-        Message.PostMessage("Account", files.Picture['path'], mVoicePath, fields.Describe, function (Error, Rows) {
+        if(fields.State)
+        {
+            mState = fields.State;
+        }
+
+        Message.PostMessage("Account", mPicturePath, mVoicePath, mState, function (Error, Rows) {
+
             if(Error)
-                throw Error;
+            {
+                Response.writeHead(550, {'Content-Type': 'text/plain'});
+                Response.write('系统出错');
+                Response.end();
+                console.log('系统出错');
+                return;
+            }
 
-            if(Rows.length >0)
+            if(Rows['warningCount'] == 0)
             {
                 Response.writeHead(200, {'Content-Type': 'text/plain'});
                 Response.write('PostMessageSuccess');
-                console.log('PostMessage');
+                Response.end();
+                console.log('PostMessageSuccess');
             }
             else
             {
                 Response.writeHead(200, {'Content-Type': 'text/plain'});
                 Response.write('PostMessageFail');
+                Response.end();
                 console.log('PostMessageFail');
             }
-
-            Response.end();
         });
     });
+}
+
+function HandleGetOtherPictureEvent(Request, Response)
+{
+    console.log('HandleGetOtherPictureEvent');
+
+    var Data = '';
+
+    //通过req的data事件监听函数，每当接受到请求体的数据，就累加到post变量中
+    Request.on('data', function(datapart)
+    {
+        Data += datapart;
+    });
+
+    //在end事件触发后，通过querystring.parse将post解析为真正的POST请求格式，然后向客户端返回。
+    Request.on('end', function()
+    {
+        Data = querystring.parse(Data);
+
+        Message.GetMessage(Data.Page, Data.Limit, function (Error, Rows) {
+
+            //如果查询到数据
+            if(Rows.length > 0)
+            {
+                var data = [];
+                for(var i = 0; i < Rows.length; i++)
+                {
+                    var Row = {};
+                    Row.Picture = Rows[i].Picture;
+                    Row.Voice = Rows[i].Voice;
+                    Row.State = Rows[i].State;
+                    data[i] = Row;
+                }
+                Response.writeHead(200, {'Content-Type': 'application/json'});
+                Response.write(JSON.stringify(data));
+                Response.end();
+                console.log(JSON.stringify(data));
+                console.log('GetOtherPictureSucceed');
+            }
+            else
+            {
+                Response.writeHead(450, {'Content-Type': 'text/plain'});
+                Response.write('GetOtherPictureFail');
+                Response.end();
+                console.log('GetOtherPictureFail');
+            }
+        });
+    });
+}
+
+function GetNowTime()
+{
+    var mDate = new Date();
+    return (mDate.getFullYear() + '-' + (mDate.getMonth() + 1) + '-' + mDate.getDate() + ' ' + mDate.getHours() + '.'  + mDate.getMinutes() + '.' + mDate.getSeconds()).toString();
 }

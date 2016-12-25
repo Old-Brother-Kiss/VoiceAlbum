@@ -48,10 +48,10 @@
             <div class="leftbottomgroup">
                 <div>
                     <button class="_n4m46">
-            <span class="_p1u2e  coreSpriteAddPhoto">
-            </span>
-            添加照片
-        </button>
+                        <span class="_p1u2e  coreSpriteAddPhoto">
+                        </span>
+                        添加照片
+                    </button>
                 </div>
 
                 <div>
@@ -336,7 +336,136 @@
     <script>
         var mp3Blob;
 
+        function Str2Bytes(str)
+        {
+
+            var pos = 0;
+
+            var len = str.length;
+
+            if(len %2 != 0)
+
+            {
+
+                return null;
+
+            }
+
+            len /= 2;
+
+            var hexA = new Array();
+
+            for(var i=0; i<len; i++)
+
+            {
+
+                var s = str.substr(pos, 2);
+
+                var v = parseInt(s, 16);
+
+                hexA.push(v);
+
+                pos += 2;
+
+            }
+
+            return hexA;
+
+        }
+
+        //字节数组转十六进制字符串
+        function Bytes2Str(arr)
+
+        {
+
+            var str = "";
+
+            for(var i=0; i<arr.length; i++)
+
+            {
+
+                var tmp = arr[i].toString(16);
+
+                if(tmp.length == 1)
+
+                {
+
+                    tmp = "0" + tmp;
+
+                }
+
+                str += tmp;
+
+            }
+
+            return str;
+
+        }
+
         window.onload = function() {
+
+            $.ajax({
+                url: "/GetOtherPicture",
+                type: "post",
+                data: {
+                    Page: "0",
+                    Limit: "10",
+                },
+                success: function(data) {
+                    for(var i = 0; i <data.length; i++)
+                    {
+                        var temp = i;
+
+                        var RequestVoice = new XMLHttpRequest();
+                        RequestVoice.open('GET', data[temp].Voice, true);//get请求，请求地址，是否异步
+                        RequestVoice.responseType = "blob";
+                        RequestVoice.onload = function() {
+                            if (this.status == 200) {
+                                var blob = new Blob();
+                                blob = this.response;
+                                var url = URL.createObjectURL(blob);
+                                var li = document.createElement('li');
+                                var au = document.createElement('audio');
+                                var hf = document.createElement('a');
+
+                                au.controls = true;
+                                au.src = url;
+                                hf.href = url;
+                                hf.download = data[temp].Voice;
+                                hf.innerHTML = hf.download;
+                                li.appendChild(au);
+                                li.appendChild(hf);
+                                recordingslist.appendChild(li);
+                            }
+                        }
+                        RequestVoice.send();
+
+                        var RequestPicture = new XMLHttpRequest();
+                        RequestPicture.open('GET', data[temp].Picture, true);//get请求，请求地址，是否异步
+                        RequestPicture.responseType = "blob";
+                        RequestPicture.onload = function() {
+                            if (this.status == 200) {
+                                var blob = new Blob();
+                                blob = this.response;
+                                var url = URL.createObjectURL(blob);
+                                var li = document.createElement('li');
+                                var au = document.createElement('audio');
+                                var hf = document.createElement('a');
+
+                                au.controls = true;
+                                au.src = url;
+                                hf.href = url;
+                                hf.download = data[temp].Picture;
+                                hf.innerHTML = hf.download;
+                                li.appendChild(au);
+                                li.appendChild(hf);
+                                recordingslist.appendChild(li);
+                            }
+                        }
+                        RequestPicture.send();
+                    }
+                }
+            });
 
             $("#upload").click(function() {
 
@@ -345,11 +474,11 @@
                 // fd.append('mp3Name', mp3Name);
                 //fd.append('Picture', mp3Blob);
                 mFormData.append('Voice', mp3Blob);
-                mFormData.append('Describe', "嗨啊");
+                mFormData.append('State', "嗨啊");
 
 
                 $.ajax({
-                    url: "/Main/PostMessage",
+                    url: "/PostMessage",
                     type: "post",
                     data: mFormData,
                     processData: false,

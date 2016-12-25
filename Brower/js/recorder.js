@@ -95,7 +95,7 @@
                     this.config = {
                         bufferLen: 4096,
                         numChannels: 2,
-                        mimeType: 'audio/wav'
+                        mimeType: 'wav'
                     };
                     this.recording = false;
                     this.callbacks = {

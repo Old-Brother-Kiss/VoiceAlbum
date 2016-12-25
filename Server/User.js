@@ -14,6 +14,15 @@ exports.Login = function (Account, PassWord, CallBack)
     StopConnect(mConnection);
 }
 
+//注册
+exports.Register = function (Account, PassWord, CallBack)
+{
+    var mConnection = ConnectMySQL();
+    var InsertSQL = 'insert ignore into ' + TableName + '(Account,PassWord) values("' + Account + '","' + PassWord +  '")';
+    mConnection.query(InsertSQL, CallBack);
+    StopConnect(mConnection);
+}
+
 //添加用户
 function Add(Account,PassWord)
 {

@@ -16,11 +16,11 @@
             <div class="container">
                 <h1>语音相册</h1>
                 <form class="form">
-                    <input type="text" id="username" placeholder="用户名">
-                    <input type="password" id="password" placeholder="密码">
-                    <button id="login-button">登陆</button>
-                    <button id="zuche">还没账号？注册个吧</button>
-                </form>
+                <input type="text" id="username" placeholder="用户名">
+                <input type="password" id="password" placeholder="密码">
+                <button type="button" id="login-button">登陆</button>
+                <button type="button" id="zuche">还没账号？注册个吧</button>
+            </form>
             </div>
         </div>
         <ul class="bg-bubbles">
@@ -41,24 +41,22 @@
     <script>
         $(document).ready(function() {
             $("#login-button").click(function() {
-                if ($("#username").val() == "" || $("#password").val() == "") {
-                    alert("请填写完整信息哦");
-                    return;
-                }
-                $.ajax({
-                    url: "/Index/Login",
-                    type: "post",
-                    data: {
-                        Username: $("#username").val(),
-                        Password: $("#password").val(),
-                    },
-                    success: function(data) {
 
-                    }
-                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                 if ($("#username").val() == "" || $("#password").val() == "") {
+                     alert("请填写完整信息哦");
+                     return;
+                 }
+                 $.ajax({
+                     url: "/Login",
+                     type: "post",
+                     data: {
+                         Username: $("#username").val(),
+                         Password: $("#password").val(),
+                     },
+                     success: function(data) {
 
-                    }
-                });
+                     }
+                 });
             })
         })
     </script>

@@ -3,18 +3,24 @@
  */
 var mysql = require('mysql');
 
-var TableName = 'voicealbum';//数据库名
+var TableName = 'message';//数据库名
 
 //发贴
-exports.PostMessage = function (Account, Picture, Voice, Describe, CallBack)
+exports.PostMessage = function (Account, Picture, Voice, State, CallBack)
 {
     var mConnection = ConnectMySQL();
-    var InsertSQL = 'insert into ' + TableName + '(Account,Picture,Voice,Describe) values("' + Account + '","' + Picture + '","' + Voice +  '","' + Describe +'")';
-    console.log(InsertSQL);
+    var InsertSQL = 'insert into ' + TableName + '(Account,Picture,Voice,State) values("' + Account + '","' + Picture + '","' + Voice +  '","' + State +'")';
     mConnection.query(InsertSQL, CallBack);
     StopConnect(mConnection);
 }
 
+exports.GetMessage = function(Page, Limit, CallBack)
+{
+    var mConnection = ConnectMySQL();
+    var SelectSQL = 'select * from ' + TableName + ' limit ' +  (Page * Limit) + ',' + Limit;
+    mConnection.query(SelectSQL, CallBack);
+    StopConnect(mConnection);
+}
 //连接数据库
 function ConnectMySQL()
 {
